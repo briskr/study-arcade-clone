@@ -1,15 +1,19 @@
+// 作为 Enemy 和 Player 共同的基类
 var Entity = function() {
+    this.sprite = null;
     this.x = 0;
     this.y = 0;
 };
 
+// 用来在
 Entity.prototype.render = function() {
-    if (undefined !== this.sprite)
+    if (this.sprite)
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // 这是我们的玩家要躲避的敌人
 var Enemy = function(row, speed) {
+    Entity.call(this);
     // 要应用到每个敌人的实例的变量写在这里
     // 我们已经提供了一个来帮助你实现更多
     if (row === undefined)
@@ -22,6 +26,9 @@ var Enemy = function(row, speed) {
     this.row = row;
     this.speed = speed;
 };
+
+Enemy.prototype = Object.create(Entity.prototype);
+Enemy.prototype.constructor = Enemy;
 
 // 此为游戏必须的函数，用来更新敌人的位置
 // 参数: dt ，表示时间间隙
@@ -39,24 +46,23 @@ Enemy.prototype.update = function(dt) {
     this.x = newX;
 };
 
-// 此为游戏必须的函数，用来在屏幕上画出敌人，
-Enemy.prototype.render = Entity.prototype.render;
-
 // 现在实现你自己的玩家类
 // 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
 var Player = function () {
+    Entity.call(this);
     this.sprite = 'images/char-boy.png';
     this.r = 5;
     this.c = 2;
 };
+
+Player.prototype = Object.create(Entity.prototype);
+Player.constructor = Player;
 
 Player.prototype.update = function() {
     var yOffset = -20;
     this.x = this.c * cellWidth;
     this.y = yOffset + this.r * cellHeight;
 };
-
-Player.prototype.render = Entity.prototype.render;
 
 Player.prototype.handleInput = function(key) {
     var maxCol = 4,
