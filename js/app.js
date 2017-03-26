@@ -7,12 +7,10 @@ var Enemy = function(row, speed) {
     if (speed === undefined)
         speed = 1;
 
-    var rowOffset = 60;
-    var rowHeight = 83;
-
     // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
     this.sprite = 'images/enemy-bug.png';
-    this.y = rowOffset + rowHeight * row;
+    var rowOffset = 60;
+    this.y = rowOffset + cellHeight * row;
     this.x = 0;
     this.speed = speed;
     console.log("new Enemy.y:" + this.y);
