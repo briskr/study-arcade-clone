@@ -1,4 +1,14 @@
-// 这是我们的玩家要躲避的敌人 
+var Entity = function() {
+    this.x = 0;
+    this.y = 0;
+};
+
+Entity.prototype.render = function() {
+    if (undefined !== this.sprite)
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// 这是我们的玩家要躲避的敌人
 var Enemy = function(row, speed) {
     // 要应用到每个敌人的实例的变量写在这里
     // 我们已经提供了一个来帮助你实现更多
@@ -30,9 +40,7 @@ Enemy.prototype.update = function(dt) {
 };
 
 // 此为游戏必须的函数，用来在屏幕上画出敌人，
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+Enemy.prototype.render = Entity.prototype.render;
 
 // 现在实现你自己的玩家类
 // 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
@@ -48,9 +56,7 @@ Player.prototype.update = function() {
     this.y = yOffset + this.r * cellHeight;
 };
 
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+Player.prototype.render = Entity.prototype.render;
 
 Player.prototype.handleInput = function(key) {
     var maxCol = 4,
