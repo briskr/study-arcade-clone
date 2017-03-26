@@ -36,21 +36,21 @@ Enemy.prototype.render = function() {
 
 // 现在实现你自己的玩家类
 // 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
-var Player = function() {
+var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.r = 5;
     this.c = 2;
-}
+};
 
 Player.prototype.update = function() {
     var yOffset = -20;
     this.x = this.c * cellWidth;
     this.y = yOffset + this.r * cellHeight;
-}
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 Player.prototype.handleInput = function(key) {
     var maxCol = 4,
@@ -74,7 +74,7 @@ Player.prototype.handleInput = function(key) {
                 this.r++;
             break;
     }
-}
+};
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
