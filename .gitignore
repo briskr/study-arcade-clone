@@ -1,0 +1,27 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+
+# Output folders
+/build/
+/bin/
+
+# Gradle related files
+.gradle
+.gradletasknamecache
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# IDE
+/.idea/
+/.vscode/
