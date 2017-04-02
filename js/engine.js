@@ -71,11 +71,45 @@ var Engine = (function(global) {
         checkCollisions();
     }
 
+    /**
+     * @description 创建Enemy, 使用随机的 row, speed 值
+     * @returns a new Enemy object
+     * @param {number} row - 行号0~3, 如不提供则随机产生
+     * @param {number} speed - 移动速度, 如不提供则随机产生
+     */
+    function makeEnemy(row, speed) {
+        var LANE_NUMBERS = 3;
+        var MAX_SPEED = 9;
+        if (!row) row = Math.floor(3 * Math.random());
+        if (!speed) speed = 2 + Math.floor(MAX_SPEED * Math.random());
+        console.debug("new enemy: row %d, speed %d", row, speed);
+        return new Enemy(row, speed);
+    }
+
+    /**
+     * @description 自动随机产生Enemy并加入集合
+     */
+    function checkEnemies() {
+        var MIN_ENEMY_NUMBER = 3;
+        var MAX_ENEMY_NUMBER = 5;
+        // TODO 改进产生规则：
+        // * 最好不要造成一行里没有Enemy; 
+        // * 不要产生位置速度都相同的Enemy实例
+        if (allEnemies.length < MIN_ENEMY_NUMBER)
+        {
+            var batch = MIN_ENEMY_NUMBER - allEnemies.length;
+            for (var i = 0; i < batch; i++) {
+                allEnemies.push(makeEnemy());
+            }
+        }
+    }
+
     /* 这个函数会遍历在 app.js 定义的存放所有敌人实例的数组，并且调用他们的 update()
      * 函数，然后，它会调用玩家对象的 update 方法，最后这个函数被 update 函数调用。
      * 这些更新函数应该只聚焦于更新和对象相关的数据/属性。把重绘的工作交给 render 函数。
      */
     function updateEntities(dt) {
+        checkEnemies();
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
@@ -83,7 +117,8 @@ var Engine = (function(global) {
     }
 
     /*
-     * 实现碰撞检测：遍历allEnemies，判断其中是否存在至少一项与player碰撞
+     * @description 实现碰撞检测：遍历allEnemies，判断其中是否存在至少一项与player碰撞.
+     * 如果发生碰撞则调用 reset().
      */
     function checkCollisions() {
         if (allEnemies.some(function(enemy) {
@@ -143,11 +178,6 @@ var Engine = (function(global) {
      * 函数调用一次。
      */
     function reset() {
-        allEnemies = [];
-        allEnemies.push(new Enemy(0, 1));
-        allEnemies.push(new Enemy(1, 3));
-        allEnemies.push(new Enemy(2, 2));
-
         player.reset();
     }
 

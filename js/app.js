@@ -1,4 +1,7 @@
-// 作为 Enemy 和 Player 共同的基类
+/**
+ * @description 作为 Enemy 和 Player 共同的基类
+ * @constructor
+ */
 var Entity = function () {
     this.sprite = null;
     this.x = 0;
@@ -10,7 +13,9 @@ var Entity = function () {
     this.boxHeight = cellHeight - 26;
 };
 
-// 用来在canvas上绘制自身的图像
+/**
+ * @description 在canvas上绘制自身的图像
+ */
 Entity.prototype.render = function () {
     if (this.sprite) {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -20,7 +25,10 @@ Entity.prototype.render = function () {
         this.boxWidth, this.boxHeight); */
 };
 
-// 计算用于检测碰撞的矩形框(相对于canvas的坐标)
+/**
+ * @description 计算用于检测碰撞的矩形框(以相对于canvas的坐标值表示)
+ * @return 含left,right,top,bottom属性的对象，表示this Entity占用的空间
+ */
 Entity.prototype.collideBox = function () {
     var left = this.x + this.boxOffsetX;
     var right = left + this.boxWidth;
@@ -34,7 +42,10 @@ Entity.prototype.collideBox = function () {
     };
 }
 
-// judges whether 'target' collides with 'this'
+/**
+ * @description judges whether 'target' collides with 'this'
+ * @param {Entity} target - the Entity to be checked against 'this'.
+ */
 Entity.prototype.collideWith = function (target) {
     if (!(target instanceof Entity)) return false;
 
@@ -50,20 +61,22 @@ Entity.prototype.collideWith = function (target) {
     return false;
 }
 
-// 这是我们的玩家要躲避的敌人
+/**
+ * @description 这是我们的玩家要躲避的敌人, 继承Entity类
+ * @param {number} row - enemy moving lane, 0 ~ 3
+ * @param {*} speed - enemy moving speed
+ */
 var Enemy = function (row, speed) {
     Entity.call(this);
-    // 要应用到每个敌人的实例的变量写在这里
-    // 我们已经提供了一个来帮助你实现更多
-    if (row === undefined)
-        row = 0;
-    if (speed === undefined)
-        speed = 1;
-
+    // 要应用到每个敌人的实例的变量
     // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
     this.sprite = 'images/enemy-bug.png';
-    this.row = row;
-    this.speed = speed;
+    this.row = row ? row : 0;
+    this.speed = speed ? speed : 1;
+
+    var OFFSET_Y = 55; // 第0行Enemy绘图时的y座标
+    this.y = OFFSET_Y + cellHeight * this.row;
+    this.x = -cellWidth; // 让Enemy从边缘进入
 
     this.boxHeight = cellHeight - 16;
 };
@@ -72,24 +85,26 @@ var Enemy = function (row, speed) {
 Enemy.prototype = Object.create(Entity.prototype);
 Enemy.prototype.constructor = Enemy;
 
-// 此为游戏必须的函数，用来更新敌人的位置
-// 参数: dt ，表示时间间隙
+/**
+ * @description 根据时隙数量和逻辑位置更新敌人的绘制座标
+// @param {number} dt - 表示上次重绘至当前经过的时间间隙数
+ */
 Enemy.prototype.update = function (dt) {
     // 你应该给每一次的移动都乘以 dt 参数，以此来保证游戏在所有的电脑上
     // 都是以同样的速度运行的
-    var speedBase = 20;
-    var rowOffsetY = 55;
-    this.y = rowOffsetY + cellHeight * this.row;
-    if (this.x === undefined)
-        this.x = -cellWidth;
-    var newX = this.x + this.speed * speedBase * dt;
-    if (newX > ctx.canvas.width)
-        newX = -cellWidth;
+    var SPEED_BASE = 20;
+    var newX = this.x + this.speed * SPEED_BASE * dt;
+    if (newX > ctx.canvas.width) {
+        // 已移出canvas，从集合中删除
+        allEnemies.splice(allEnemies.indexOf(this), 1);
+    }
     this.x = newX;
 };
 
-// 现在实现你自己的玩家类
-// 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
+/**
+ * @description 玩家类, 继承 Entity
+ * @constructor
+ */
 var Player = function () {
     Entity.call(this);
     this.sprite = 'images/char-boy.png';
@@ -104,20 +119,26 @@ var Player = function () {
 Player.prototype = Object.create(Entity.prototype);
 Player.constructor = Player;
 
-// set initial position of player.
+/**
+ * @description set initial position of player.
+ */
 Player.prototype.reset = function () {
     this.r = 5;
     this.c = 2;
 }
 
-// calc current coords
+/**
+ * @description calc current coords
+ */
 Player.prototype.update = function () {
     var yOffset = -25;
     this.x = this.c * cellWidth;
     this.y = yOffset + this.r * cellHeight;
 };
 
-// calc row / column value after key input
+/**
+ * @description calc new row / column value after key input
+ */
 Player.prototype.handleInput = function (key) {
     var maxCol = 4,
         maxRow = 5;
