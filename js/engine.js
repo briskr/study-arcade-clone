@@ -82,7 +82,7 @@ var Engine = (function(global) {
         var MAX_SPEED = 9;
         if (!row) row = Math.floor(3 * Math.random());
         if (!speed) speed = 2 + Math.floor(MAX_SPEED * Math.random());
-        console.debug("new enemy: row %d, speed %d", row, speed);
+        //console.debug("new enemy: row %d, speed %d", row, speed);
         return new Enemy(row, speed);
     }
 
@@ -114,6 +114,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        msg.update(dt);
     }
 
     /*
@@ -159,6 +160,8 @@ var Engine = (function(global) {
         }
 
         renderEntities();
+
+        renderScore();
     }
 
     /* 这个函数会在每个时间间隙被 render 函数调用。他的目的是分别调用你在 enemy 和 player
@@ -171,6 +174,27 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        msg.render();
+    }
+
+    /**
+     * @description 绘制计分数字
+     */
+    function renderScore() {
+        var SCORE_AREA_WIDTH = 160;
+        var SCORE_LABEL_WIDTH = 60;
+        var SCORE_LABEL_HEIGHT = 32;
+        var TOP_SPACE_HEIGHT = 50;
+        ctx.textBaseline = 'bottom';
+        ctx.font = 'lighter 24px sans-serif';
+        ctx.clearRect(0, 0, ctx.canvas.width, TOP_SPACE_HEIGHT);
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'left';
+        ctx.fillText("Passed: ", ctx.canvas.width - SCORE_AREA_WIDTH, SCORE_LABEL_HEIGHT);
+        ctx.fillStyle = 'blue';
+        ctx.textAlign = 'right';
+        ctx.fillText(player.score, ctx.canvas.width, SCORE_LABEL_HEIGHT, maxWidth = SCORE_LABEL_WIDTH);
     }
 
     /* 这个函数现在没干任何事，但是这会是一个好地方让你来处理游戏重置的逻辑。可能是一个
