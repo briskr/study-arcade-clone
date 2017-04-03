@@ -11,10 +11,8 @@ You can also clone the code, then open `index.html` in your browser.
 
 ## Game control
 
-Move up until you reach the river.
-
-Use arrow keys to move around to avoid colliding with the moving bugs.
+Use arrow keys on your keyboard to move around.  Move up until you reach the river.  Try to avoid colliding with the moving bugs.
 
 ## System requirements
 
-This game should be able to run in most mainstream browsers with `canvas` support, on mobile or desktop platform
+This game should be able to run in most mainstream browsers with `canvas` support, on mobile or desktop platforms. But for now it cannot be controlled by touchscreen, you need a keyboard to play it.
