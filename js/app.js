@@ -119,7 +119,7 @@ var Player = function () {
 
 // Player extends Entity
 Player.prototype = Object.create(Entity.prototype);
-Player.constructor = Player;
+Player.prototype.constructor = Player;
 
 /**
  * @description set initial position of player.
